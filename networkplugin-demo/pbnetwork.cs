@@ -10,21 +10,20 @@
 // Generated from: pbnetwork.proto
 namespace pbnetwork
 {
-    using System;
-    using ProtoBuf;
-
-  [Serializable, ProtoContract(Name=@"Connected")]
-  public partial class Connected : IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Connected")]
+  public partial class Connected : global::ProtoBuf.IExtensible
   {
-      private string _user;
-    [ProtoMember(1, IsRequired = true, Name=@"user", DataFormat = DataFormat.Default)]
+    public Connected() {}
+    
+    private string _user;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"user", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public string user
     {
       get { return _user; }
       set { _user = value; }
     }
-    private IExtension extensionObject;
-    IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
@@ -154,10 +153,10 @@ namespace pbnetwork
       set { _groups = value; }
     }
 
-    private int _status = default(int);
+    private pbnetwork.StatusType _status = pbnetwork.StatusType.STATUS_ONLINE;
     [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"status", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int status
+    [global::System.ComponentModel.DefaultValue(pbnetwork.StatusType.STATUS_ONLINE)]
+    public pbnetwork.StatusType status
     {
       get { return _status; }
       set { _status = value; }
@@ -316,9 +315,9 @@ namespace pbnetwork
       get { return _flag; }
       set { _flag = value; }
     }
-    private int _status;
+    private pbnetwork.StatusType _status;
     [global::ProtoBuf.ProtoMember(5, IsRequired = true, Name=@"status", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int status
+    public pbnetwork.StatusType status
     {
       get { return _status; }
       set { _status = value; }
@@ -416,9 +415,9 @@ namespace pbnetwork
       get { return _userName; }
       set { _userName = value; }
     }
-    private int _status;
+    private pbnetwork.StatusType _status;
     [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"status", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int status
+    public pbnetwork.StatusType status
     {
       get { return _status; }
       set { _status = value; }
@@ -462,6 +461,77 @@ namespace pbnetwork
     {
       get { return _shared; }
       set { _shared = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"File")]
+  public partial class File : global::ProtoBuf.IExtensible
+  {
+    public File() {}
+    
+    private string _userName;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"userName", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string userName
+    {
+      get { return _userName; }
+      set { _userName = value; }
+    }
+    private string _buddyName;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"buddyName", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string buddyName
+    {
+      get { return _buddyName; }
+      set { _buddyName = value; }
+    }
+    private string _fileName;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"fileName", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string fileName
+    {
+      get { return _fileName; }
+      set { _fileName = value; }
+    }
+    private int _size;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"size", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int size
+    {
+      get { return _size; }
+      set { _size = value; }
+    }
+
+    private int _ftID = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"ftID", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int ftID
+    {
+      get { return _ftID; }
+      set { _ftID = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"FileTransferData")]
+  public partial class FileTransferData : global::ProtoBuf.IExtensible
+  {
+    public FileTransferData() {}
+    
+    private int _ftID;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"ftID", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int ftID
+    {
+      get { return _ftID; }
+      set { _ftID = value; }
+    }
+    private byte[] _data;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"data", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public byte[] data
+    {
+      get { return _data; }
+      set { _data = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -557,12 +627,47 @@ namespace pbnetwork
       TYPE_ATTENTION = 22,
             
       [global::ProtoBuf.ProtoEnum(Name=@"TYPE_STATS", Value=23)]
-      TYPE_STATS = 23
+      TYPE_STATS = 23,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_FT_START", Value=24)]
+      TYPE_FT_START = 24,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_FT_FINISH", Value=25)]
+      TYPE_FT_FINISH = 25,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_FT_DATA", Value=26)]
+      TYPE_FT_DATA = 26
     }
   
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"StatusType")]
+    public enum StatusType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STATUS_ONLINE", Value=0)]
+      STATUS_ONLINE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STATUS_AWAY", Value=1)]
+      STATUS_AWAY = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STATUS_FFC", Value=2)]
+      STATUS_FFC = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STATUS_XA", Value=3)]
+      STATUS_XA = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STATUS_DND", Value=4)]
+      STATUS_DND = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STATUS_NONE", Value=5)]
+      STATUS_NONE = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STATUS_INVISIBLE", Value=6)]
+      STATUS_INVISIBLE = 6
+    }
   
 }

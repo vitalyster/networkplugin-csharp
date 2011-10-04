@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using ProtoBuf;
@@ -35,6 +36,12 @@ namespace MSNBackend
 			Contact contact = messenger.ContactList.GetContact(message.ConversationMessagePayload.buddyName);
 			messenger.SendTextMessage(contact, message.ConversationMessagePayload.message);
 		}
+		
+		private void HandleStatusChanged(object sender, networkplugin_csharp.StatusChangedEventArgs status)
+		{
+			MSNMessenger messenger = messengers[status.StatusChangedPayload.userName];
+			messenger.setStatus(messenger.PluginStatusToPresenceStatus(status.StatusChangedPayload.status));
+		}
 
         public MSNPlugin(string host, string port) : base(host, port)
         {
@@ -42,6 +49,7 @@ namespace MSNBackend
             LoggedIn += HandleLogin;
             LoggedOut += HandleLogout;
 			ConversationMessage += HandleConversationMessage;
+			StatusChanged += HandleStatusChanged;
         }
     
     }

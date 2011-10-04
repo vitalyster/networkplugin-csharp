@@ -13,6 +13,7 @@ namespace MSNBackend
 	{
 		private string user;
 		private MSNPlugin plugin;
+		private PresenceStatus st;
 
 		public MSNMessenger(MSNPlugin plugin, string user, string legacyName, string password)
 		{
@@ -57,6 +58,23 @@ namespace MSNBackend
 			}
 		}
 
+		public PresenceStatus PluginStatusToPresenceStatus(StatusType status)
+		{
+			switch(status) {
+				case StatusType.STATUS_AWAY:
+					return PresenceStatus.Away;
+				default:
+					return PresenceStatus.Online;
+			}
+		}
+
+		public void setStatus(PresenceStatus stat) {
+			st = stat;
+			if (this.Connected) {
+				Owner.Status = st;
+			}
+		}
+
 		private void ContactService_ContactAdded(object sender, ListMutateEventArgs e)
 		{
 		}
@@ -70,7 +88,7 @@ namespace MSNBackend
 
 		private void Nameserver_SignedIn(object sender, EventArgs e)
 		{
-			Owner.Status = PresenceStatus.Online;
+			Owner.Status = st;
             var connected = new Connected { user = this.user };
             plugin.SendMessage(WrapperMessage.Type.TYPE_CONNECTED, connected);
 		}

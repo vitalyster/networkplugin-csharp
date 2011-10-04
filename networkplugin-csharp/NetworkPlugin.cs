@@ -28,6 +28,12 @@ namespace networkplugin_csharp
         public ConversationMessage ConversationMessagePayload { get; set; }
     }
     public delegate void ConversationMessageEventHandler(object sender, ConversationMessageEventArgs e);
+	
+    public class StatusChangedEventArgs : EventArgs
+    {
+		public pbnetwork.Status StatusChangedPayload { get; set; }
+    }
+    public delegate void StatusChangedEventHandler(object sender, StatusChangedEventArgs e);
 
     public class NetworkPlugin
     {
@@ -66,6 +72,14 @@ namespace networkplugin_csharp
         public void OnConversationMessage(ConversationMessageEventArgs e)
         {
             ConversationMessageEventHandler handler = ConversationMessage;
+            if (handler != null) handler(this, e);
+        }
+
+		public event StatusChangedEventHandler StatusChanged;
+
+        public void OnStatusChanged(StatusChangedEventArgs e)
+        {
+            StatusChangedEventHandler handler = StatusChanged;
             if (handler != null) handler(this, e);
         }
 
@@ -139,6 +153,17 @@ namespace networkplugin_csharp
                                                                                                    message.payload))
                                                                                    };
                                                                OnConversationMessage(msgargs);
+                                                               break;
+                                                           case WrapperMessage.Type.TYPE_STATUS_CHANGED:
+                                                               var statusargs = new StatusChangedEventArgs
+                                                                                   {
+                                                                                       StatusChangedPayload =
+                                                                                           Serializer.Deserialize<Status>
+                                                                                           (
+                                                                                               new MemoryStream(
+                                                                                                   message.payload))
+                                                                                   };
+                                                               OnStatusChanged(statusargs);
                                                                break;
                                                            default:
                                                                Trace.WriteLine("Unhandled packet: " + message.type.ToString());

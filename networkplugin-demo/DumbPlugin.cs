@@ -14,11 +14,7 @@ namespace networkplugin_demo
             Trace.WriteLine(string.Format("Login: {0}, {1}, {2}", login.LoginPayload.user, login.LoginPayload.password, login.LoginPayload.legacyName));
 
             var connected = new Connected { user = login.LoginPayload.user };
-            var wrapper = new WrapperMessage { type = WrapperMessage.Type.TYPE_CONNECTED };
-            var ms = new MemoryStream();
-            Serializer.Serialize<Connected>(ms, connected);
-            wrapper.payload = ms.ToArray();
-            Serializer.SerializeWithLengthPrefix<WrapperMessage>(((NetworkPlugin)sender).Stream, wrapper, PrefixStyle.Fixed32BigEndian);
+            SendMessage(WrapperMessage.Type.TYPE_CONNECTED, connected);
         }
 
         private void HandleLogout(object sender, LogOutEventArgs logout)

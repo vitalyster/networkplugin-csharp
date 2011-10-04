@@ -30,7 +30,16 @@ namespace networkplugin_csharp
         public string Host { get; set; }
         public string Port { get; set; }
 
-        public NetworkStream Stream { get; private set; }
+        protected NetworkStream Stream { get; private set; }
+
+    public void SendMessage<T>(WrapperMessage.Type type, T contract) 
+    {
+        var wrapper = new WrapperMessage { type = type };
+        var ms = new MemoryStream();
+        Serializer.Serialize<T>(ms, contract);
+        wrapper.payload = ms.ToArray();
+        Serializer.SerializeWithLengthPrefix<WrapperMessage>(Stream, wrapper, PrefixStyle.Fixed32BigEndian);
+    }
 
         public event LogInEventHandler LoggedIn;
 

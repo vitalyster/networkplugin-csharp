@@ -636,7 +636,13 @@ namespace pbnetwork
       TYPE_FT_FINISH = 25,
             
       [global::ProtoBuf.ProtoEnum(Name=@"TYPE_FT_DATA", Value=26)]
-      TYPE_FT_DATA = 26
+      TYPE_FT_DATA = 26,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_FT_PAUSE", Value=27)]
+      TYPE_FT_PAUSE = 27,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_FT_CONTINUE", Value=28)]
+      TYPE_FT_CONTINUE = 28
     }
   
     private global::ProtoBuf.IExtension extensionObject;

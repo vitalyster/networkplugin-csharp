@@ -23,6 +23,11 @@ namespace networkplugin_csharp
     }
     public delegate void LogOutEventHandler(object sender, LogOutEventArgs e);
 
+    public class ConversationMessageEventArgs : EventArgs
+    {
+        public ConversationMessage ConversationMessagePayload { get; set; }
+    }
+    public delegate void ConversationMessageEventHandler(object sender, ConversationMessageEventArgs e);
 
     public class NetworkPlugin
     {
@@ -53,6 +58,14 @@ namespace networkplugin_csharp
         public void OnLoggedOut(LogOutEventArgs e)
         {
             LogOutEventHandler handler = LoggedOut;
+            if (handler != null) handler(this, e);
+        }
+		
+		public event ConversationMessageEventHandler ConversationMessage;
+
+        public void OnConversationMessage(ConversationMessageEventArgs e)
+        {
+            ConversationMessageEventHandler handler = ConversationMessage;
             if (handler != null) handler(this, e);
         }
 
@@ -115,6 +128,17 @@ namespace networkplugin_csharp
                                                                                                    message.payload))
                                                                                    };
                                                                OnLoggedOut(outargs);
+                                                               break;
+                                                           case WrapperMessage.Type.TYPE_CONV_MESSAGE:
+                                                               var msgargs = new ConversationMessageEventArgs
+                                                                                   {
+                                                                                       ConversationMessagePayload =
+                                                                                           Serializer.Deserialize<ConversationMessage>
+                                                                                           (
+                                                                                               new MemoryStream(
+                                                                                                   message.payload))
+                                                                                   };
+                                                               OnConversationMessage(msgargs);
                                                                break;
                                                            default:
                                                                Trace.WriteLine("Unhandled packet: " + message.type.ToString());

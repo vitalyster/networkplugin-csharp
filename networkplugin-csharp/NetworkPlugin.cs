@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using ProtoBuf;
 using pbnetwork;
 
@@ -73,7 +72,9 @@ namespace networkplugin_csharp
         public void Connect()
         {
             _mre = new ManualResetEvent(false);
-            Task.Factory.StartNew( () =>
+
+
+            ThreadPool.QueueUserWorkItem((object stateInfo) =>
                                        {
                                            using (var client = new TcpClient())
                                            {

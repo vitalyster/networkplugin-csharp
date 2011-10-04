@@ -1,3 +1,5 @@
 
 *.gpState
 *.suo
+*.dll
+*.exe

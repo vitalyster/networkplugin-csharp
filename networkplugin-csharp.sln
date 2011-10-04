@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "networkplugin-csharp", "networkplugin-csharp\networkplugin-csharp.csproj", "{8C94536D-B605-483B-8651-FE280FA1753C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkPlugin", "networkplugin-demo\NetworkPlugin.csproj", "{0DDA20C1-041D-4C4E-8C5B-AA51711B02F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "networkplugin-demo", "networkplugin-demo\networkplugin-demo.csproj", "{0DDA20C1-041D-4C4E-8C5B-AA51711B02F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

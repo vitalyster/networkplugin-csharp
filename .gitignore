@@ -1,4 +1,6 @@
-
+*/bin/*
+*/obj/*
+*Resharper*
 *.gpState
 *.suo
 *.dll

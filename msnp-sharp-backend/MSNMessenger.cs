@@ -11,7 +11,7 @@ namespace MSNBackend
 {
 	public class MSNMessenger : Messenger
 	{
-		private string user;
+		public string user;
 		private MSNPlugin plugin;
 		private PresenceStatus st;
 

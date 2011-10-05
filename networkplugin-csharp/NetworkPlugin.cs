@@ -35,6 +35,12 @@ namespace networkplugin_csharp
     }
     public delegate void StatusChangedEventHandler(object sender, StatusChangedEventArgs e);
 
+    public class VCardEventArgs : EventArgs
+    {
+		public pbnetwork.VCard VCardPayload { get; set; }
+    }
+    public delegate void VCardEventHandler(object sender, VCardEventArgs e);
+
     public class NetworkPlugin
     {
         public string Host { get; set; }
@@ -80,6 +86,14 @@ namespace networkplugin_csharp
         public void OnStatusChanged(StatusChangedEventArgs e)
         {
             StatusChangedEventHandler handler = StatusChanged;
+            if (handler != null) handler(this, e);
+        }
+
+		public event VCardEventHandler VCardRequest;
+
+        public void OnVCard(VCardEventArgs e)
+        {
+            VCardEventHandler handler = VCardRequest;
             if (handler != null) handler(this, e);
         }
 
@@ -164,6 +178,17 @@ namespace networkplugin_csharp
                                                                                                    message.payload))
                                                                                    };
                                                                OnStatusChanged(statusargs);
+                                                               break;
+                                                           case WrapperMessage.Type.TYPE_VCARD:
+                                                               var vcardargs = new VCardEventArgs
+                                                                                   {
+                                                                                       VCardPayload =
+                                                                                           Serializer.Deserialize<VCard>
+                                                                                           (
+                                                                                               new MemoryStream(
+                                                                                                   message.payload))
+                                                                                   };
+                                                               OnVCard(vcardargs);
                                                                break;
                                                            default:
                                                                Trace.WriteLine("Unhandled packet: " + message.type.ToString());

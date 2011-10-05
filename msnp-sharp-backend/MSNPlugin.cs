@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Drawing;
 using ProtoBuf;
 using networkplugin_csharp;
 using pbnetwork;
@@ -43,6 +44,48 @@ namespace MSNBackend
 			messenger.setStatus(messenger.PluginStatusToPresenceStatus(status.StatusChangedPayload.status));
 		}
 
+		public byte[] imageToByteArray(Image imageIn)
+		{
+			MemoryStream ms = new MemoryStream();
+			imageIn.Save(ms,System.Drawing.Imaging.ImageFormat.Gif);
+			return  ms.ToArray();
+		}
+		
+		public Image byteArrayToImage(byte[] byteArrayIn)
+		{
+		     MemoryStream ms = new MemoryStream(byteArrayIn);
+		     Image returnImage = Image.FromStream(ms);
+		     return returnImage;
+		}
+
+		void HandleVCardRequest(object sender, VCardEventArgs vcard)
+        {
+        	MSNMessenger messenger = messengers[vcard.VCardPayload.userName];
+			if (vcard.VCardPayload.photo == null) {
+				if (messenger.Owner.Account == vcard.VCardPayload.buddyName) {
+		            var response = new VCard { userName = messenger.user, buddyName = messenger.Owner.Account, id = vcard.VCardPayload.id,
+												nickname = messenger.Owner.NickName, fullname = messenger.Owner.Name,
+						 photo = messenger.Owner.DisplayImage != null && messenger.Owner.DisplayImage.Image != null ? imageToByteArray(messenger.Owner.DisplayImage.Image) : new byte[0]};
+		            SendMessage(WrapperMessage.Type.TYPE_VCARD, response);
+				}
+				else {
+					Contact contact = messenger.ContactList.GetContact(vcard.VCardPayload.buddyName);
+					if (contact != null) {
+			            var response = new VCard { userName = messenger.user, buddyName = vcard.VCardPayload.buddyName, id = vcard.VCardPayload.id,
+									nickname = contact.NickName, fullname = contact.Name,
+						 	photo = contact.DisplayImage != null && contact.DisplayImage.Image != null ? imageToByteArray(contact.DisplayImage.Image) : new byte[0]};
+		            	SendMessage(WrapperMessage.Type.TYPE_VCARD, response);
+					}
+				}
+			}
+			else {
+				var newImage = byteArrayToImage(vcard.VCardPayload.photo);
+	            messenger.Owner.UpdateDisplayImage(newImage);
+                messenger.Owner.UpdateRoamingProfileSync(newImage);
+			}
+			
+        }
+
         public MSNPlugin(string host, string port) : base(host, port)
         {
 			messengers = new Dictionary<string, MSNMessenger>();
@@ -50,6 +93,7 @@ namespace MSNBackend
             LoggedOut += HandleLogout;
 			ConversationMessage += HandleConversationMessage;
 			StatusChanged += HandleStatusChanged;
+			VCardRequest += HandleVCardRequest;
         }
     
     }

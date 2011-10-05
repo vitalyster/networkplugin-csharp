@@ -81,7 +81,7 @@ namespace MSNBackend
 		
 		private void Nameserver_ContactOnline(object sender, ContactStatusChangedEventArgs e)
 		{
-			var buddy = new Buddy {userName = this.user, buddyName = e.Contact.Account, alias = e.Contact.Name,
+			var buddy = new Buddy {userName = this.user, buddyName = e.Contact.Account, alias = e.Contact.PreferredName,
 			                        groups = e.Contact.ContactGroups.Count == 0 ? "Buddies" : e.Contact.ContactGroups[0].ToString(), status = MSNStatusTypeToPluginType(e.NewStatus) };
 			plugin.SendMessage(WrapperMessage.Type.TYPE_BUDDY_CHANGED, buddy);
 		}

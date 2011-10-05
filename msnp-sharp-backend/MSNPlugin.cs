@@ -64,7 +64,7 @@ namespace MSNBackend
 			if (vcard.VCardPayload.photo == null) {
 				if (messenger.Owner.Account == vcard.VCardPayload.buddyName) {
 		            var response = new VCard { userName = messenger.user, buddyName = messenger.Owner.Account, id = vcard.VCardPayload.id,
-												nickname = messenger.Owner.NickName, fullname = messenger.Owner.Name,
+												nickname = messenger.Owner.PreferredName, fullname = messenger.Owner.Name,
 						 photo = messenger.Owner.DisplayImage != null && messenger.Owner.DisplayImage.Image != null ? imageToByteArray(messenger.Owner.DisplayImage.Image) : new byte[0]};
 		            SendMessage(WrapperMessage.Type.TYPE_VCARD, response);
 				}
@@ -72,7 +72,7 @@ namespace MSNBackend
 					Contact contact = messenger.ContactList.GetContact(vcard.VCardPayload.buddyName);
 					if (contact != null) {
 			            var response = new VCard { userName = messenger.user, buddyName = vcard.VCardPayload.buddyName, id = vcard.VCardPayload.id,
-									nickname = contact.NickName, fullname = contact.Name,
+									nickname = contact.PreferredName, fullname = contact.Name,
 						 	photo = contact.DisplayImage != null && contact.DisplayImage.Image != null ? imageToByteArray(contact.DisplayImage.Image) : new byte[0]};
 		            	SendMessage(WrapperMessage.Type.TYPE_VCARD, response);
 					}

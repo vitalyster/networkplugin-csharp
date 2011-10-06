@@ -1,6 +1,10 @@
 using System;
 using System.Timers;
 using System.Collections;
+using System.Collections.Generic;
+using System.Net;
+using System.IO;
+using System.Drawing;
 using MSNPSharp;
 using MSNPSharp.Apps;
 using MSNPSharp.Core;
@@ -18,6 +22,14 @@ namespace MSNBackend
 		private PresenceStatus st;
 		private System.Threading.Timer timer;
 		private Queue DisplayImageQueue;
+		private Dictionary<string, Image> avatars;
+		private bool signedin;
+		
+		public Image getAvatar(string name) {
+			if (avatars.ContainsKey(name))
+				return avatars[name];
+			return null;
+		}
 
 		public MSNMessenger(MSNPlugin plugin, string user, string legacyName, string password)
 		{
@@ -26,12 +38,18 @@ namespace MSNBackend
 			this.user = user;
 			timer = null;
 			DisplayImageQueue = new Queue();
+			avatars = new Dictionary<string, Image>();
+			signedin = false;
 
 			
 			Nameserver.SignedIn += new EventHandler<EventArgs>(Nameserver_SignedIn);
 			Nameserver.AuthenticationError += new EventHandler<ExceptionEventArgs>(Nameserver_AuthenticationError);
 			Nameserver.ContactOnline += new EventHandler<ContactStatusChangedEventArgs>(Nameserver_ContactOnline);
 			Nameserver.ContactOffline += new EventHandler<ContactStatusChangedEventArgs>(Nameserver_ContactOnline);
+            NameserverProcessor.ConnectingException += new EventHandler<ExceptionEventArgs>(NameserverProcessor_ConnectingException);
+            Nameserver.ExceptionOccurred += new EventHandler<ExceptionEventArgs>(Nameserver_ExceptionOccurred);
+            Nameserver.AuthenticationError += new EventHandler<ExceptionEventArgs>(Nameserver_AuthenticationError);
+            Nameserver.ServerErrorReceived += new EventHandler<MSNErrorEventArgs>(Nameserver_ServerErrorReceived);
             MessageManager.TypingMessageReceived += new EventHandler<TypingArrivedEventArgs>(Nameserver_TypingMessageReceived);
             MessageManager.TextMessageReceived += new EventHandler<TextMessageArrivedEventArgs>(Nameserver_TextMessageReceived);
 			MessageManager.NudgeReceived += new EventHandler<NudgeArrivedEventArgs>(MessageManager_NudgeReceived);
@@ -40,6 +58,18 @@ namespace MSNBackend
 			
 			Credentials = new Credentials(legacyName, password);
 			Connect();
+		}
+		
+		private void Nameserver_ExceptionOccurred(object sender, ExceptionEventArgs e) {
+			
+		}
+		
+		private void NameserverProcessor_ConnectingException(object sender, ExceptionEventArgs e) {
+			
+		}
+		
+		private void Nameserver_ServerErrorReceived(object sender, MSNErrorEventArgs e) {
+			
 		}
 		
 		private void Nameserver_AuthenticationError(object sender, ExceptionEventArgs e) {
@@ -95,7 +125,7 @@ namespace MSNBackend
 
 		public void setStatus(PresenceStatus stat) {
 			st = stat;
-			if (this.Connected) {
+			if (signedin) {
 				Owner.Status = st;
 			}
 		}
@@ -116,6 +146,17 @@ namespace MSNBackend
 
 		private void DownloadedDisplayImage(object sender, ObjectEventArgs e) {
 			Console.WriteLine("DownloadedDisplayImage");
+			var request = (HttpWebRequest) sender;
+			foreach(var lst in ContactList) {
+				foreach(var remoteContact in lst.Value.Values) {
+
+					if (remoteContact.UserTileURL != null && remoteContact.ClientType != IMAddressInfoType.WindowsLive && remoteContact.UserTileURL == request.RequestUri) {
+						avatars.Add(remoteContact.Account, Image.FromStream(new MemoryStream((byte[])e.Object)));
+						Console.WriteLine("Image set");
+					}
+				}
+			}
+			
 		}
 		
 		private void Nameserver_ContactOnline(object sender, ContactStatusChangedEventArgs e)
@@ -161,6 +202,7 @@ namespace MSNBackend
 		private void Nameserver_SignedIn(object sender, EventArgs e)
 		{
 			Owner.Status = st;
+			signedin = true;
 			timer = new System.Threading.Timer(FetchNextDisplayImage, "", 3000, 5000);
             var connected = new Connected { user = this.user };
             plugin.SendMessage(WrapperMessage.Type.TYPE_CONNECTED, connected);

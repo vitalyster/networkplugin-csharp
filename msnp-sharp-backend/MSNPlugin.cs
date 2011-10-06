@@ -28,8 +28,10 @@ namespace MSNBackend
 
         private void HandleLogout(object sender, LogOutEventArgs logout)
         {
-			if (messengers.ContainsKey(logout.LogoutPayload.user))
+			if (messengers.ContainsKey(logout.LogoutPayload.user)) {
             	messengers[logout.LogoutPayload.user].Disconnect();
+				messengers.Remove(logout.LogoutPayload.user);
+			}
         }
 		
 		private void HandleConversationMessage(object sender, ConversationMessageEventArgs message)
@@ -41,8 +43,10 @@ namespace MSNBackend
 		
 		private void HandleStatusChanged(object sender, networkplugin_csharp.StatusChangedEventArgs status)
 		{
-			MSNMessenger messenger = messengers[status.StatusChangedPayload.userName];
-			messenger.setStatus(messenger.PluginStatusToPresenceStatus(status.StatusChangedPayload.status));
+			if (messengers.ContainsKey(status.StatusChangedPayload.userName)) {
+				MSNMessenger messenger = messengers[status.StatusChangedPayload.userName];
+				messenger.setStatus(messenger.PluginStatusToPresenceStatus(status.StatusChangedPayload.status));
+			}
 		}
 
 		public byte[] imageToByteArray(Image imageIn)
@@ -75,6 +79,12 @@ namespace MSNBackend
 			            var response = new VCard { userName = messenger.user, buddyName = vcard.VCardPayload.buddyName, id = vcard.VCardPayload.id,
 									nickname = contact.PreferredName, fullname = contact.Name,
 						 	photo = contact.DisplayImage != null && contact.DisplayImage.Image != null ? imageToByteArray(contact.DisplayImage.Image) : new byte[0]};
+						
+						Image img = messenger.getAvatar(contact.Account);
+						if (img != null) {
+							response.photo = imageToByteArray(img);
+						}
+						
 		            	SendMessage(WrapperMessage.Type.TYPE_VCARD, response);
 					}
 				}

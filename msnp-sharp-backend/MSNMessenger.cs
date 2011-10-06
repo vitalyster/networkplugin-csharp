@@ -1,4 +1,6 @@
 using System;
+using System.Timers;
+using System.Collections;
 using MSNPSharp;
 using MSNPSharp.Apps;
 using MSNPSharp.Core;
@@ -14,14 +16,20 @@ namespace MSNBackend
 		public string user;
 		private MSNPlugin plugin;
 		private PresenceStatus st;
+		private System.Threading.Timer timer;
+		private Queue DisplayImageQueue;
 
 		public MSNMessenger(MSNPlugin plugin, string user, string legacyName, string password)
 		{
 			Console.WriteLine("AAAAAAA2");
 			this.plugin = plugin;
 			this.user = user;
+			timer = null;
+			DisplayImageQueue = new Queue();
+
 			
 			Nameserver.SignedIn += new EventHandler<EventArgs>(Nameserver_SignedIn);
+			Nameserver.AuthenticationError += new EventHandler<ExceptionEventArgs>(Nameserver_AuthenticationError);
 			Nameserver.ContactOnline += new EventHandler<ContactStatusChangedEventArgs>(Nameserver_ContactOnline);
 			Nameserver.ContactOffline += new EventHandler<ContactStatusChangedEventArgs>(Nameserver_ContactOnline);
             MessageManager.TypingMessageReceived += new EventHandler<TypingArrivedEventArgs>(Nameserver_TypingMessageReceived);
@@ -32,6 +40,16 @@ namespace MSNBackend
 			
 			Credentials = new Credentials(legacyName, password);
 			Connect();
+		}
+		
+		private void Nameserver_AuthenticationError(object sender, ExceptionEventArgs e) {
+			var message = new Disconnected {user = this.user, error = 0, message = e.Exception.InnerException.Message};
+			plugin.SendMessage(WrapperMessage.Type.TYPE_DISCONNECTED, message);
+			plugin.messengers.Remove(user);
+			plugin = null;
+			if (timer != null) {
+				timer.Dispose();
+			}
 		}
 
 		private void MessageManager_NudgeReceived(object sender, NudgeArrivedEventArgs e) {
@@ -102,37 +120,48 @@ namespace MSNBackend
 		
 		private void Nameserver_ContactOnline(object sender, ContactStatusChangedEventArgs e)
 		{
-            if (e.Contact.Status != PresenceStatus.Offline)
-            {
-                if (e.Contact.DisplayImage != e.Contact.UserTileLocation)
-                {
-	                //RequestDisplayImage(e.Contact, null);
-				}
+			if (e.NewStatus != PresenceStatus.Offline) {
+				DisplayImageQueue.Enqueue(e.Contact);
 			}
-			
-			if (e.Contact.UserTileURL != null && e.Contact.ClientType != IMAddressInfoType.WindowsLive) {
-				HttpAsyncDataDownloader.BeginDownload(e.Contact.UserTileURL.AbsoluteUri, new EventHandler<ObjectEventArgs>(DownloadedDisplayImage), null);
-			}
-			
 			ContactChanged(e.Contact);
 		}
 
         private void RequestDisplayImage(Contact remoteContact, DisplayImage updateImage)
         {
-            if (remoteContact.P2PVersionSupported != P2PVersion.None && 
-                remoteContact.ClientType == IMAddressInfoType.WindowsLive &&
-                updateImage != remoteContact.UserTileLocation)
+            if (remoteContact.Status != PresenceStatus.Offline)
             {
-                if (updateImage == null)
-                    updateImage = remoteContact.DisplayImage;
+                if (remoteContact.DisplayImage != remoteContact.UserTileLocation)
+                {
+		            if (remoteContact.P2PVersionSupported != P2PVersion.None && 
+		                remoteContact.ClientType == IMAddressInfoType.WindowsLive &&
+		                updateImage != remoteContact.UserTileLocation)
+		            {
+		                if (updateImage == null)
+		                    updateImage = remoteContact.DisplayImage;
+		
+		                RequestMsnObject(remoteContact, updateImage);
+		            }
+				}
+			}
+			
+			if (remoteContact.UserTileURL != null && remoteContact.ClientType != IMAddressInfoType.WindowsLive) {
+				HttpAsyncDataDownloader.BeginDownload(remoteContact.UserTileURL.AbsoluteUri, new EventHandler<ObjectEventArgs>(DownloadedDisplayImage), null);
+			}
 
-                RequestMsnObject(remoteContact, updateImage);
-            }
         }
+		
+		private void FetchNextDisplayImage(object data) {
+			if (DisplayImageQueue.Count == 0)
+				return;
+			Contact c = (Contact) DisplayImageQueue.Dequeue();
+			Console.WriteLine("Fetching DisplayImage of" + c.Account);
+			RequestDisplayImage(c, null);
+		}
 
 		private void Nameserver_SignedIn(object sender, EventArgs e)
 		{
 			Owner.Status = st;
+			timer = new System.Threading.Timer(FetchNextDisplayImage, "", 3000, 5000);
             var connected = new Connected { user = this.user };
             plugin.SendMessage(WrapperMessage.Type.TYPE_CONNECTED, connected);
 		}

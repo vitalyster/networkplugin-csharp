@@ -17,7 +17,7 @@ namespace MSNBackend
 {
     public class MSNPlugin : NetworkPlugin
     {
-		private Dictionary<string, MSNMessenger> messengers;
+		public Dictionary<string, MSNMessenger> messengers;
 
         private void HandleLogin(object sender, LogInEventArgs login)
         {
@@ -28,7 +28,8 @@ namespace MSNBackend
 
         private void HandleLogout(object sender, LogOutEventArgs logout)
         {
-            messengers[logout.LogoutPayload.user].Disconnect();
+			if (messengers.ContainsKey(logout.LogoutPayload.user))
+            	messengers[logout.LogoutPayload.user].Disconnect();
         }
 		
 		private void HandleConversationMessage(object sender, ConversationMessageEventArgs message)

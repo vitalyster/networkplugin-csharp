@@ -1,4 +1,4 @@
-//#define TRACE
+#define TRACE
 
 using System;
 using System.Diagnostics;
@@ -15,7 +15,7 @@ namespace MSNBackend
         
         public static void Main(string[] args)
         {
-            //Trace.Listeners.Add(new ConsoleTraceListener(true));            
+            Trace.Listeners.Add(new ConsoleTraceListener(true));            
             var host = args[1];
             var port = args[3];
             var backend = new MSNPlugin(host, port);

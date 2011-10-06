@@ -41,6 +41,13 @@ namespace networkplugin_csharp
     }
     public delegate void VCardEventHandler(object sender, VCardEventArgs e);
 
+    public class BuddyEventArgs : EventArgs
+    {
+		public pbnetwork.Buddy BuddyPayload { get; set; }
+    }
+    public delegate void TypingEventHandler(object sender, BuddyEventArgs e);
+	public delegate void AttentionEventHandler(object sender, ConversationMessageEventArgs e);
+
     public class NetworkPlugin
     {
         public string Host { get; set; }
@@ -94,6 +101,22 @@ namespace networkplugin_csharp
         public void OnVCard(VCardEventArgs e)
         {
             VCardEventHandler handler = VCardRequest;
+            if (handler != null) handler(this, e);
+        }
+		
+		public event TypingEventHandler Typing;
+
+        public void OnTyping(BuddyEventArgs e)
+        {
+            TypingEventHandler handler = Typing;
+            if (handler != null) handler(this, e);
+        }
+
+		public event AttentionEventHandler Attention;
+
+        public void OnAttention(ConversationMessageEventArgs e)
+        {
+            AttentionEventHandler handler = Attention;
             if (handler != null) handler(this, e);
         }
 
@@ -189,6 +212,28 @@ namespace networkplugin_csharp
                                                                                                    message.payload))
                                                                                    };
                                                                OnVCard(vcardargs);
+                                                               break;
+                                                           case WrapperMessage.Type.TYPE_BUDDY_TYPING:
+                                                               var typingargs = new BuddyEventArgs
+                                                                                   {
+                                                                                       BuddyPayload =
+                                                                                           Serializer.Deserialize<Buddy>
+                                                                                           (
+                                                                                               new MemoryStream(
+                                                                                                   message.payload))
+                                                                                   };
+                                                               OnTyping(typingargs);
+                                                               break;
+                                                           case WrapperMessage.Type.TYPE_ATTENTION:
+                                                               var attentionargs = new ConversationMessageEventArgs
+                                                                                   {
+                                                                                       ConversationMessagePayload =
+                                                                                           Serializer.Deserialize<ConversationMessage>
+                                                                                           (
+                                                                                               new MemoryStream(
+                                                                                                   message.payload))
+                                                                                   };
+                                                               OnAttention(attentionargs);
                                                                break;
                                                            default:
                                                                Trace.WriteLine("Unhandled packet: " + message.type.ToString());

@@ -94,6 +94,26 @@ namespace MSNBackend
 			ConversationMessage += HandleConversationMessage;
 			StatusChanged += HandleStatusChanged;
 			VCardRequest += HandleVCardRequest;
+			Typing += HandleTyping;
+			Attention += HandleAttention;
+        }
+
+        void HandleAttention (object sender, ConversationMessageEventArgs e)
+        {
+        	MSNMessenger messenger = messengers[e.ConversationMessagePayload.userName];
+			Contact contact = messenger.ContactList.GetContact(e.ConversationMessagePayload.buddyName);
+			if (contact != null) {
+				messenger.SendNudge(contact);
+			}
+        }
+
+        void HandleTyping (object sender, BuddyEventArgs e)
+        {
+        	MSNMessenger messenger = messengers[e.BuddyPayload.userName];
+			Contact contact = messenger.ContactList.GetContact(e.BuddyPayload.buddyName);
+			if (contact != null) {
+				messenger.SendTypingMessage(contact);
+			}
         }
     
     }

@@ -26,11 +26,17 @@ namespace MSNBackend
 			Nameserver.ContactOffline += new EventHandler<ContactStatusChangedEventArgs>(Nameserver_ContactOnline);
             MessageManager.TypingMessageReceived += new EventHandler<TypingArrivedEventArgs>(Nameserver_TypingMessageReceived);
             MessageManager.TextMessageReceived += new EventHandler<TextMessageArrivedEventArgs>(Nameserver_TextMessageReceived);
+			MessageManager.NudgeReceived += new EventHandler<NudgeArrivedEventArgs>(MessageManager_NudgeReceived);
 			ContactService.ContactAdded += new EventHandler<ListMutateEventArgs>(ContactService_ContactAdded);
 			Nameserver.AutoSynchronize = true;
 			
 			Credentials = new Credentials(legacyName, password);
 			Connect();
+		}
+
+		private void MessageManager_NudgeReceived(object sender, NudgeArrivedEventArgs e) {
+			var message = new ConversationMessage {userName = this.user, buddyName = e.Sender.Account, message = "" };
+			plugin.SendMessage(WrapperMessage.Type.TYPE_ATTENTION, message);
 		}
 		
         private void Nameserver_TextMessageReceived(object sender, TextMessageArrivedEventArgs e)
@@ -41,7 +47,8 @@ namespace MSNBackend
 
         private void Nameserver_TypingMessageReceived(object sender, TypingArrivedEventArgs e)
         {
-        	
+			var message = new Buddy {userName = this.user, buddyName = e.Sender.Account};
+			plugin.SendMessage(WrapperMessage.Type.TYPE_BUDDY_TYPING, message);
         }
 		
 		private StatusType MSNStatusTypeToPluginType(PresenceStatus status)
@@ -78,13 +85,50 @@ namespace MSNBackend
 		private void ContactService_ContactAdded(object sender, ListMutateEventArgs e)
 		{
 		}
+	
+		private void ContactChanged(Contact contact) {
+			var buddy = new Buddy {userName = this.user, buddyName = contact.Account, alias = contact.PreferredName,
+			                        groups = contact.ContactGroups.Count == 0 ? "Buddies" : contact.ContactGroups[0].ToString(), status = MSNStatusTypeToPluginType(contact.Status) };
+			if (contact.DisplayImage != null && contact.DisplayImage.Image != null) {
+				buddy.iconHash = contact.DisplayImage.Sha;
+			}
+			buddy.statusMessage = contact.PersonalMessage.Message;
+			plugin.SendMessage(WrapperMessage.Type.TYPE_BUDDY_CHANGED, buddy);
+		}
+
+		private void DownloadedDisplayImage(object sender, ObjectEventArgs e) {
+			Console.WriteLine("DownloadedDisplayImage");
+		}
 		
 		private void Nameserver_ContactOnline(object sender, ContactStatusChangedEventArgs e)
 		{
-			var buddy = new Buddy {userName = this.user, buddyName = e.Contact.Account, alias = e.Contact.PreferredName,
-			                        groups = e.Contact.ContactGroups.Count == 0 ? "Buddies" : e.Contact.ContactGroups[0].ToString(), status = MSNStatusTypeToPluginType(e.NewStatus) };
-			plugin.SendMessage(WrapperMessage.Type.TYPE_BUDDY_CHANGED, buddy);
+            if (e.Contact.Status != PresenceStatus.Offline)
+            {
+                if (e.Contact.DisplayImage != e.Contact.UserTileLocation)
+                {
+	                //RequestDisplayImage(e.Contact, null);
+				}
+			}
+			
+			if (e.Contact.UserTileURL != null && e.Contact.ClientType != IMAddressInfoType.WindowsLive) {
+				HttpAsyncDataDownloader.BeginDownload(e.Contact.UserTileURL.AbsoluteUri, new EventHandler<ObjectEventArgs>(DownloadedDisplayImage), null);
+			}
+			
+			ContactChanged(e.Contact);
 		}
+
+        private void RequestDisplayImage(Contact remoteContact, DisplayImage updateImage)
+        {
+            if (remoteContact.P2PVersionSupported != P2PVersion.None && 
+                remoteContact.ClientType == IMAddressInfoType.WindowsLive &&
+                updateImage != remoteContact.UserTileLocation)
+            {
+                if (updateImage == null)
+                    updateImage = remoteContact.DisplayImage;
+
+                RequestMsnObject(remoteContact, updateImage);
+            }
+        }
 
 		private void Nameserver_SignedIn(object sender, EventArgs e)
 		{

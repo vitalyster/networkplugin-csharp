@@ -12,6 +12,7 @@ using MSNPSharp.P2P;
 using MSNPSharp.MSNWS.MSNABSharingService;
 using MSNPSharp.IO;
 using pbnetwork;
+using System.Linq;
 
 namespace MSNBackend
 {
@@ -135,9 +136,17 @@ namespace MSNBackend
 		}
 	
 		private void ContactChanged(Contact contact) {
-			var buddy = new Buddy {userName = this.user, buddyName = contact.Account, alias = contact.PreferredName,
-			                        groups = contact.ContactGroups.Count == 0 ? "Buddies" : contact.ContactGroups[0].ToString(), status = MSNStatusTypeToPluginType(contact.Status) };
-			if (contact.DisplayImage != null && contact.DisplayImage.Image != null) {
+		    var buddy = new Buddy
+		                    {
+		                        userName = this.user,
+		                        buddyName = contact.Account,
+		                        alias = contact.PreferredName,
+		                        status = MSNStatusTypeToPluginType(contact.Status),
+		                        @group = contact.ContactGroups.Count == 0
+		                                     ? new List<String> {"Buddies"}
+		                                     : contact.ContactGroups.Select(g => g.Name).ToList()
+		                    };
+		    if (contact.DisplayImage != null && contact.DisplayImage.Image != null) {
 				buddy.iconHash = contact.DisplayImage.Sha;
 			}
 			buddy.statusMessage = contact.PersonalMessage.Message;

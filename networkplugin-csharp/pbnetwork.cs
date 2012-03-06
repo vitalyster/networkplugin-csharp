@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from: pbnetwork.proto
+// Generated from: protocol.proto
 namespace pbnetwork
 {
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Connected")]
@@ -143,15 +143,14 @@ namespace pbnetwork
       get { return _alias; }
       set { _alias = value; }
     }
-
-    private string _groups = "";
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"groups", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string groups
+    private global::System.Collections.Generic.List<string> _group = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"group", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> group
     {
-      get { return _groups; }
-      set { _groups = value; }
+        get { return _group; }
+        set { _group = value; }
     }
+  
 
     private pbnetwork.StatusType _status = pbnetwork.StatusType.STATUS_ONLINE;
     [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"status", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
@@ -642,13 +641,72 @@ namespace pbnetwork
       TYPE_FT_PAUSE = 27,
             
       [global::ProtoBuf.ProtoEnum(Name=@"TYPE_FT_CONTINUE", Value=28)]
-      TYPE_FT_CONTINUE = 28
+      TYPE_FT_CONTINUE = 28,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_EXIT", Value=29)]
+      TYPE_EXIT = 29
     }
   
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"ConnectionError")]
+    public enum ConnectionError
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_NETWORK_ERROR", Value=0)]
+      CONNECTION_ERROR_NETWORK_ERROR = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_INVALID_USERNAME", Value=1)]
+      CONNECTION_ERROR_INVALID_USERNAME = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_AUTHENTICATION_FAILED", Value=2)]
+      CONNECTION_ERROR_AUTHENTICATION_FAILED = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_AUTHENTICATION_IMPOSSIBLE", Value=3)]
+      CONNECTION_ERROR_AUTHENTICATION_IMPOSSIBLE = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_NO_SSL_SUPPORT", Value=4)]
+      CONNECTION_ERROR_NO_SSL_SUPPORT = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_ENCRYPTION_ERROR", Value=5)]
+      CONNECTION_ERROR_ENCRYPTION_ERROR = 5,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_NAME_IN_USE", Value=6)]
+      CONNECTION_ERROR_NAME_IN_USE = 6,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_INVALID_SETTINGS", Value=7)]
+      CONNECTION_ERROR_INVALID_SETTINGS = 7,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_CERT_NOT_PROVIDED", Value=8)]
+      CONNECTION_ERROR_CERT_NOT_PROVIDED = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_CERT_UNTRUSTED", Value=9)]
+      CONNECTION_ERROR_CERT_UNTRUSTED = 9,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_CERT_EXPIRED", Value=10)]
+      CONNECTION_ERROR_CERT_EXPIRED = 10,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_CERT_NOT_ACTIVATED", Value=11)]
+      CONNECTION_ERROR_CERT_NOT_ACTIVATED = 11,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_CERT_HOSTNAME_MISMATCH", Value=12)]
+      CONNECTION_ERROR_CERT_HOSTNAME_MISMATCH = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_CERT_FINGERPRINT_MISMATCH", Value=13)]
+      CONNECTION_ERROR_CERT_FINGERPRINT_MISMATCH = 13,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_CERT_SELF_SIGNED", Value=14)]
+      CONNECTION_ERROR_CERT_SELF_SIGNED = 14,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_CERT_OTHER_ERROR", Value=15)]
+      CONNECTION_ERROR_CERT_OTHER_ERROR = 15,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CONNECTION_ERROR_OTHER_ERROR", Value=16)]
+      CONNECTION_ERROR_OTHER_ERROR = 16
+    }
   
     [global::ProtoBuf.ProtoContract(Name=@"StatusType")]
     public enum StatusType

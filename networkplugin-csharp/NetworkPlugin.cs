@@ -150,7 +150,8 @@ namespace networkplugin_csharp
                                                client.Connect(Host, int.Parse(Port));
                                                Trace.WriteLine("Backend connected");
                                                Stream = client.GetStream();
-                                               while (true)
+                                               var cont = true;
+                                               while (cont)
                                                {
                                                    try
                                                    {
@@ -211,6 +212,10 @@ namespace networkplugin_csharp
                                                                                        ConversationMessagePayload = GetMessage<ConversationMessage>(message.payload)
                                                                                    };
                                                                OnAttention(attentionargs);
+                                                               break;
+                                                           case WrapperMessage.Type.TYPE_EXIT:
+                                                               Trace.WriteLine("Normal shutdown");
+                                                               cont = false;
                                                                break;
                                                            default:
                                                                Trace.WriteLine("Unhandled packet: " + message.type.ToString());

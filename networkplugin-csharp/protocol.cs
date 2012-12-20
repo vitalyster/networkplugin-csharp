@@ -86,6 +86,13 @@ namespace pbnetwork
       get { return _password; }
       set { _password = value; }
     }
+    private readonly global::System.Collections.Generic.List<string> _extraFields = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"extraFields", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> extraFields
+    {
+      get { return _extraFields; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -143,12 +150,11 @@ namespace pbnetwork
       get { return _alias; }
       set { _alias = value; }
     }
-    private global::System.Collections.Generic.List<string> _group = new global::System.Collections.Generic.List<string>();
+    private readonly global::System.Collections.Generic.List<string> _group = new global::System.Collections.Generic.List<string>();
     [global::ProtoBuf.ProtoMember(4, Name=@"group", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<string> group
     {
-        get { return _group; }
-        set { _group = value; }
+      get { return _group; }
     }
   
 
@@ -236,6 +242,24 @@ namespace pbnetwork
       get { return _xhtml; }
       set { _xhtml = value; }
     }
+
+    private string _timestamp = "";
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"timestamp", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string timestamp
+    {
+      get { return _timestamp; }
+      set { _timestamp = value; }
+    }
+
+    private bool _headline = default(bool);
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"headline", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool headline
+    {
+      get { return _headline; }
+      set { _headline = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -276,6 +300,30 @@ namespace pbnetwork
       get { return _password; }
       set { _password = value; }
     }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"RoomList")]
+  public partial class RoomList : global::ProtoBuf.IExtensible
+  {
+    public RoomList() {}
+    
+    private readonly global::System.Collections.Generic.List<string> _room = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"room", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> room
+    {
+      get { return _room; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<string> _name = new global::System.Collections.Generic.List<string>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<string> name
+    {
+      get { return _name; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -461,6 +509,13 @@ namespace pbnetwork
       get { return _shared; }
       set { _shared = value; }
     }
+    private string _id;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -531,6 +586,23 @@ namespace pbnetwork
     {
       get { return _data; }
       set { _data = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BackendConfig")]
+  public partial class BackendConfig : global::ProtoBuf.IExtensible
+  {
+    public BackendConfig() {}
+    
+    private string _config;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"config", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string config
+    {
+      get { return _config; }
+      set { _config = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -644,7 +716,16 @@ namespace pbnetwork
       TYPE_FT_CONTINUE = 28,
             
       [global::ProtoBuf.ProtoEnum(Name=@"TYPE_EXIT", Value=29)]
-      TYPE_EXIT = 29
+      TYPE_EXIT = 29,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_BACKEND_CONFIG", Value=30)]
+      TYPE_BACKEND_CONFIG = 30,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_QUERY", Value=31)]
+      TYPE_QUERY = 31,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_ROOM_LIST", Value=32)]
+      TYPE_ROOM_LIST = 32
     }
   
     private global::ProtoBuf.IExtension extensionObject;

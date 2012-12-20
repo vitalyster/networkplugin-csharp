@@ -47,7 +47,7 @@ namespace MSNBackend
 			Nameserver.AuthenticationError += new EventHandler<ExceptionEventArgs>(Nameserver_AuthenticationError);
 			Nameserver.ContactOnline += new EventHandler<ContactStatusChangedEventArgs>(Nameserver_ContactOnline);
 			Nameserver.ContactOffline += new EventHandler<ContactStatusChangedEventArgs>(Nameserver_ContactOnline);
-            NameserverProcessor.ConnectingException += new EventHandler<ExceptionEventArgs>(NameserverProcessor_ConnectingException);
+            //NameserverProcessor.ConnectingException += new EventHandler<ExceptionEventArgs>(NameserverProcessor_ConnectingException);
             Nameserver.ExceptionOccurred += new EventHandler<ExceptionEventArgs>(Nameserver_ExceptionOccurred);
             Nameserver.AuthenticationError += new EventHandler<ExceptionEventArgs>(Nameserver_AuthenticationError);
             Nameserver.ServerErrorReceived += new EventHandler<MSNErrorEventArgs>(Nameserver_ServerErrorReceived);
@@ -55,7 +55,7 @@ namespace MSNBackend
             MessageManager.TextMessageReceived += new EventHandler<TextMessageArrivedEventArgs>(Nameserver_TextMessageReceived);
 			MessageManager.NudgeReceived += new EventHandler<NudgeArrivedEventArgs>(MessageManager_NudgeReceived);
 			ContactService.ContactAdded += new EventHandler<ListMutateEventArgs>(ContactService_ContactAdded);
-			Nameserver.AutoSynchronize = true;
+			//Nameserver.AutoSynchronize = true;
 			
 			Credentials = new Credentials(legacyName, password);
 			Connect();
@@ -142,9 +142,9 @@ namespace MSNBackend
 		                        buddyName = contact.Account,
 		                        alias = contact.PreferredName,
 		                        status = MSNStatusTypeToPluginType(contact.Status),
-		                        @group = contact.ContactGroups.Count == 0
+		                       /* @group = contact.ContactGroups.Count == 0
 		                                     ? new List<String> {"Buddies"}
-		                                     : contact.ContactGroups.Select(g => g.Name).ToList()
+		                                     : contact.ContactGroups.Select(g => g.Name).ToList()*/
 		                    };
 		    if (contact.DisplayImage != null && contact.DisplayImage.Image != null) {
 				buddy.iconHash = contact.DisplayImage.Sha;

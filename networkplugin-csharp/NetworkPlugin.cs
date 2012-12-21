@@ -225,11 +225,10 @@ namespace networkplugin_csharp
                                                    catch (IOException e)
                                                    {
                                                        Trace.WriteLine("SocketException: " + e.Message);
-                                                       _mre.Set();
                                                        break;
                                                    }
                                                }
-
+                                               _mre.Set();
                                            }
                                        });
         }

@@ -16,6 +16,7 @@ namespace spectrum2_sharposcar_backend
         
         public OscarPlugin(string host, string port) : base(host, port)
         {
+            Config.SupportReceipts = true;
             OscarSessions = new Dictionary<string, Session>();
             LoggedIn += (sender, login) =>
                 {
@@ -68,6 +69,14 @@ namespace spectrum2_sharposcar_backend
                     session.Messaging.Send(new Message(contact, MessageType.Outgoing,
                                                        //datetime,
                                                        message.ConversationMessagePayload.message));
+                    var ack = new ConversationMessage
+                                  {
+                                      id = message.ConversationMessagePayload.id,
+                                      userName = message.ConversationMessagePayload.userName,
+                                      buddyName = message.ConversationMessagePayload.buddyName,
+                                      message = ""
+                                  };
+                    SendMessage(WrapperMessage.Type.TYPE_CONV_MESSAGE_ACK, ack);
                 };
         }
 

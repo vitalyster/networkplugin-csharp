@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using ProtoBuf;
 using pbnetwork;
@@ -44,11 +45,26 @@ namespace networkplugin_csharp
     }
     public delegate void TypingEventHandler(object sender, BuddyEventArgs e);
     public delegate void AttentionEventHandler(object sender, ConversationMessageEventArgs e);
+    
+    public class PluginConfig
+    {
+        public bool NeedRegistration { get; set; }
+        public bool NeedPassword { get; set; }
+        public bool SupportReceipts { get; set; }
+
+        public string ToCfgString()
+        {
+            return string.Format("[registration]\nneedPassword={0}\nneedRegistration={1}\n[features]\nreceipts={2}",
+                                 NeedPassword ? 1 : 0, NeedRegistration ? 1 : 0, SupportReceipts ? 1 : 0);
+        }
+    }
 
     public class NetworkPlugin
     {
         public string Host { get; set; }
         public string Port { get; set; }
+
+        public PluginConfig Config { get; set; }
 
         protected NetworkStream Stream { get; private set; }
 
@@ -84,6 +100,7 @@ namespace networkplugin_csharp
         {
             Host = host;
             Port = port;
+            Config = new PluginConfig {NeedPassword = true, NeedRegistration = true, SupportReceipts = false};
         }
 
         private ManualResetEvent _mre;
@@ -104,6 +121,9 @@ namespace networkplugin_csharp
                         client.Connect(Host, int.Parse(Port));
                         Trace.WriteLine("Backend connected");
                         Stream = client.GetStream();
+                        Serializer.SerializeWithLengthPrefix(Stream, 
+                            new WrapperMessage {type = WrapperMessage.Type.TYPE_BACKEND_CONFIG, payload = Encoding.UTF8.GetBytes(Config.ToCfgString())}, 
+                            PrefixStyle.Fixed32BigEndian);
                         var cont = true;
                         while (cont)
                         {

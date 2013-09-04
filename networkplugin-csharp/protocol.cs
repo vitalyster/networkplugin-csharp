@@ -269,6 +269,15 @@ namespace pbnetwork
       get { return _id; }
       set { _id = value; }
     }
+
+    private bool _pm = default(bool);
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"pm", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool pm
+    {
+      get { return _pm; }
+      set { _pm = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -737,7 +746,10 @@ namespace pbnetwork
       TYPE_ROOM_LIST = 32,
             
       [global::ProtoBuf.ProtoEnum(Name=@"TYPE_CONV_MESSAGE_ACK", Value=33)]
-      TYPE_CONV_MESSAGE_ACK = 33
+      TYPE_CONV_MESSAGE_ACK = 33,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"TYPE_RAW_XML", Value=34)]
+      TYPE_RAW_XML = 34
     }
   
     private global::ProtoBuf.IExtension extensionObject;
@@ -825,6 +837,35 @@ namespace pbnetwork
             
       [global::ProtoBuf.ProtoEnum(Name=@"STATUS_INVISIBLE", Value=6)]
       STATUS_INVISIBLE = 6
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"ParticipantFlag")]
+    public enum ParticipantFlag
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PARTICIPANT_FLAG_NONE", Value=0)]
+      PARTICIPANT_FLAG_NONE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PARTICIPANT_FLAG_MODERATOR", Value=1)]
+      PARTICIPANT_FLAG_MODERATOR = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PARTICIPANT_FLAG_CONFLICT", Value=2)]
+      PARTICIPANT_FLAG_CONFLICT = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PARTICIPANT_FLAG_BANNED", Value=4)]
+      PARTICIPANT_FLAG_BANNED = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PARTICIPANT_FLAG_NOT_AUTHORIZED", Value=8)]
+      PARTICIPANT_FLAG_NOT_AUTHORIZED = 8,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PARTICIPANT_FLAG_ME", Value=16)]
+      PARTICIPANT_FLAG_ME = 16,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PARTICIPANT_FLAG_KICKED", Value=32)]
+      PARTICIPANT_FLAG_KICKED = 32,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PARTICIPANT_FLAG_ROOM_NOT_FOUND", Value=64)]
+      PARTICIPANT_FLAG_ROOM_NOT_FOUND = 64
     }
   
 }

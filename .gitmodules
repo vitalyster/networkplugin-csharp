@@ -1,0 +1,3 @@
+[submodule "sharposcar"]
+	path = sharposcar
+	url = https://bitbucket.org/vitalyster/sharposcar.git

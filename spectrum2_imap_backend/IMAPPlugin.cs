@@ -27,6 +27,7 @@ namespace spectrum2_imap_backend
                     .AnswerRecords.OfType<SrvRecord>().First();
                 var newClient = new ImapClient(service.Target, service.Port, 
                     login.LoginPayload.legacyName, login.LoginPayload.password, AuthMethod.Auto, true);
+		SendMessage(WrapperMessage.Type.TYPE_CONNECTED, new Connected {user = login.LoginPayload.user});
                 SendMessage(WrapperMessage.Type.TYPE_BUDDY_CHANGED, new Buddy
                 {
                     userName = login.LoginPayload.user,

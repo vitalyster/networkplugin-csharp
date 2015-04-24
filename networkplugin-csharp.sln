@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4782D0
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spectrum2_imap_backend", "spectrum2_imap_backend\spectrum2_imap_backend.csproj", "{EA331E90-A23A-43BD-947A-C87B158DA642}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,16 @@ Global
 		{E826312F-894D-4C3B-A2DC-64FE034EE974}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E826312F-894D-4C3B-A2DC-64FE034EE974}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E826312F-894D-4C3B-A2DC-64FE034EE974}.Release|x86.ActiveCfg = Release|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EA331E90-A23A-43BD-947A-C87B158DA642}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

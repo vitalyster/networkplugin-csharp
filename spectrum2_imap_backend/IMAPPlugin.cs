@@ -23,7 +23,7 @@ namespace spectrum2_imap_backend
             LoggedIn += (sender, login) =>
             {
                 var address = new MailAddress(login.LoginPayload.legacyName);
-                var service = DnsClient.Default.Resolve(address.Host, RecordType.Srv)
+                var service = DnsClient.Default.Resolve(string.Format("_imaps._tcp.{0}", address.Host), RecordType.Srv)
                     .AnswerRecords.OfType<SrvRecord>().First();
                 var newClient = new ImapClient(service.Target, service.Port, 
                     login.LoginPayload.legacyName, login.LoginPayload.password, AuthMethod.Auto, true);

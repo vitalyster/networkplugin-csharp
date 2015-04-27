@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
-using ARSoft.Tools.Net.Dns;
+﻿using System.Diagnostics;
 
 namespace spectrum2_imap_backend
 {

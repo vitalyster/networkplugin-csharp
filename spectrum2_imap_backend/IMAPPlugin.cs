@@ -33,6 +33,7 @@ namespace spectrum2_imap_backend
                 newClient.NewMessage += (o, args) =>
                 {
                     var msg = args.Client.GetMessage(args.MessageUID, FetchOptions.HeadersOnly).Subject;
+                    args.Client.RemoveMessageFlags(args.MessageUID, null, MessageFlag.Seen);
                     SendMessage(WrapperMessage.Type.TYPE_CONV_MESSAGE, new ConversationMessage
                     {
                         userName = login.LoginPayload.user,
